@@ -1,3 +1,3 @@
-sing_values <- function(x){
+missing_values <- function(x){
         sum(is.na(x))
 }
