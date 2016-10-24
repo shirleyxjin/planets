@@ -1,0 +1,1 @@
+This directory contains the data set `Advertising.csv` and the ShinyDoc code file `app.R`. The `app.R` file contains codes that will generate a interactive ShinyDoc plot that contains a dropdown with a list of 3 options: TV, Radio and newspaper as input values. The output plot is a scatter plot between sales and the input option chosen from the dropdown.
