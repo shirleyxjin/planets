@@ -1,0 +1,81 @@
+\documentclass{article}
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+
+%% Sets page size and margins
+\usepackage[top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\title{Simple Regression Analysis}
+\author{Shirley Jin}
+\date{\today}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\maketitle
+
+<<setup, echo=False>>=
+library(knitr)
+@
+
+\begin{abstract}
+In this report we will reproduce the regression results on sales and advertising effectiveness displayed in section 3.1 Simple Linear Regression (Chapter 3) of the book \href{http://www-bcf.usc.edu/~gareth/ISL/}{\textbf{[An Introduction to Statistical Learning]}}.
+\end{abstract}
+
+\section{Introduction}
+
+The specific goal of this report is to examine the relationship between sales (in terms of thousands of units sold) and advertising budget (in thousands of dollars). We will develop a model that will be used to predict sales on the basis of each of the three media budgets (\textbf{TV}, \textbf{Radio}, and \textbf{Newspaper}). This examination will allow us to better understand the effectiveness of different methods of advertising on sales.
+
+\section{Data}
+
+The Advertising data set, downloaded from \textbf{An Introduction to Statistical Learning}, consists of \textbf{Sales} (in thousands of units) of a particular product in 200 different markets, along with advertising budgets (in thousands of dollars) for the product in each of those markets for three different media: TV, Radio, and Newspaper. We will mainly use the \textbf{TV} data out of the three different media types.
+
+\section{Methodology}
+
+For this report, we will only be looking at one media type from the data set, TV. We will examine the relationship of Sales of this product with TV advertising budget. We will use a simple linear model:
+\begin{equation}
+ Sales  = \beta_0 + \beta_1 * TV
+\end{equation}
+To estimate the coefficients $\beta_0$ and $\beta_1$, we will fit a regression model via the least squares criterion.
+
+\section{Results}
+
+First, we computed the regression coefficients their that relative t values. The results is listed in the Table 1.
+<<regression table, echo=False, results = tex>>=
+library(xtable)
+load(file = "regression.RData")
+print(xtable(summary(regression),caption="Information about Regression Coefficients"),type = "latex", comment = FALSE)
+@
+From this table, we can see that the coefficient for the regression of number of units sold on TV advertising budget indicates that an increase of \$1,000 in the TV advertising budget will yield an increase in sales by 47.5 units. This number seems to indicate quite small of an effect. However, the coefficients of $\beta_0$ and $\beta_1$ are both quite large relative to their standard errors, and their t-stats are also quite large. This seems to indicate that $\beta_0$ and $\beta_1$ are significant, and that the null hypothesis that there's no relationship between the TV ad budget and number of units sold can be rejected.
+
+Next, let's look at how well this regression model fits the data. We computed the Regression Quality Indices listed in the Table 2.
+<<summary stats table, echo = FALSE, results=tex>>=
+rqi <- data.frame(c("RSS","R2","F-stat"),c(summary(regression)$sigma,summary(regression)$r.squared,summary(regression)$fstatistic[1]))
+colnames(rqi)<- c("Quantity","Value")
+table_rqi <- xtable(rqi,caption = "Regression quality Indices")
+print(table_rqi,type="latex",comment=FALSE)
+@
+Looking at this table, a RSE of 3.26 on this regression model seems quite large. A 3260 units of average predicted deviation from sales is large relative to mean of Sales data of 14.0 thousand units, and this indicates that the fit of regression line to the data is not very good. R squared of 0.61 also seems to confirm the lack of fit of the regression line to the data, only 61\% of the variability in sales can be explained by the regression on TV ad budget.
+
+In fact we can observe this in our regression diagram shown in Figure 1.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.3\textwidth]{scatterplot-tv-sales.png}
+\caption{\label{fig:scatterplot}Scatterplot with fitted regression line}
+\end{figure}
+
+The deviation of the scatterplot from the regression line is quite significant and the spread gets larger as the level of TV ad budget increases.
+
+\section{Conclusion}
+
+In conclusion, we examined the relationship between sales data in thousands of units sold and the TV advertising budget in thousands of dollars in this paper. We found a small but significant effect of TV ad budget on sales. An increase in TV ad budget of \$1,000 can yield an increase of 47.5 units of product sold. The null hypothesis is rejected. However, we also found that this model may not be the best model to predict the relationship. The model fit is not ideal as indicated by the large RSE and the small R squared data. Looking at the diagram, it seems like the deviation of the predicted sales values deviate significantly from the regression line, and more so when the TV ad budget value increases. We might need to examine an alternative model to better determine the TV ad effectiveness on sales.
+
+\end{document}
